@@ -1,0 +1,30 @@
+services:
+  postgres:
+    build: .
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - db-store:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_DB: ${DB_NAME}
+      TZ: Asia/Tokyo
+    restart: always
+  pgadmin:
+    image: dpage/pgadmin4:8.8
+    ports:
+        - 8888:80
+    volumes:
+        - pgadmin-data:/var/lib/pgadmin
+    environment:
+        PGADMIN_DEFAULT_EMAIL: root@example.com
+        PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
+        TZ: Asia/Tokyo
+    depends_on:
+      - postgres
+    restart: always
+volumes:
+  db-store:
+  pgadmin-data:
